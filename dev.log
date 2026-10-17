@@ -1,0 +1,317 @@
+▲ Next.js 16.4.1 (webpack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.42:3000
+- Environments: .env.local
+✓ Ready in 407ms
+⚠ Attempted to load @next/swc-win32-x64-msvc, but an error occurred: \\?\C:\Users\MSI\Desktop\bookified\node_modules\@next\swc-win32-x64-msvc\next-swc.win32-x64-msvc.node is not a valid Win32 application.
+\\?\C:\Users\MSI\Desktop\bookified\node_modules\@next\swc-win32-x64-msvc\next-swc.win32-x64-msvc.node
+✓ Running next.config.ts took 144ms
+  Skipping creating a lockfile at C:\Users\MSI\Desktop\bookified\.next\dev\lock because we're using WASM bindings
+- Experiments (use with caution):
+  · serverActions
+
+[browser] Uncaught Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RenderFromTemplateContext>
+      <ScrollHandler renderTree={{...}}>
+        <InnerScrollHandler scrollRef={{scrollRef:null, ...}} renderTree={{...}}>
+          <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+            <LoadingBoundary name="new/" loading={null}>
+              <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+                <RedirectBoundary>
+                  <RedirectErrorBoundary router={{...}}>
+                    <InnerLayoutRouter url="/books/new" tree={[...]} params={{}} renderTree={{...}} segmentPath={[...]} ...>
+                      <SegmentViewNode type="page" pagePath="(root)/boo...">
+                        <SegmentTrieNode>
+                        <Page>
+                          <main className="new-book">
+                            <section>
+                            <UploadForm>
++                             <div className="new-book-wrapper">
+                      ...
+                    ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at div (<anonymous>)
+    at UploadForm (webpack-internal:///(app-pages-browser)/./components/UploadForm.tsx:154:88)
+    at Page (about://React/Server/webpack-internal:///(rsc)/./app/(root)/books/new/page.tsx?8:39:88)
+[browser] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview (https://boss-cowbird-944.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js:40:1032)
+[browser] Clerk: Structural CSS detected that may break on updates.
+
+Found:
+  - CSS ".cl-drawerRoot .cl-formButtonPrimary"
+  - CSS ".cl-modalContent .cl-formButtonPrimary"
+  - CSS ".cl-checkoutForm .cl-formButtonPrimary"
+  - CSS ".cl-main button[type="submit"][class*="formButtonPrimary"]"
+  - CSS ".cl-footer button[class*="formButtonPrimary"]"
+  (+5 more)
+
+These selectors depend on the internal DOM structure of Clerk's components, which may change when Clerk deploys component updates.
+To prevent breaking changes, install @clerk/ui and pass it to ClerkProvider:
+
+  import { ui } from '@clerk/ui'
+  <ClerkProvider ui={ui}>
+
+Learn more: https://clerk.com/docs/reference/components/versioning
+(code=structural_css_pin_clerk_ui) (https://boss-cowbird-944.clerk.accounts.dev/npm/@clerk/ui@1/dist/ui.browser.js:35:1730)
+Attention: Clerk collects telemetry data from its SDKs when connected to development instances.
+The data collected is used to inform Clerk's product roadmap.
+To learn more, including how to opt-out from the telemetry program, visit: https://clerk.com/docs/telemetry.
+
+Watchpack Error (initial scan): Error: EINVAL: invalid argument, lstat 'C:\DumpStack.log.tmp'
+Watchpack Error (initial scan): Error: EINVAL: invalid argument, lstat 'C:\System Volume Information'
+Watchpack Error (initial scan): Error: EINVAL: invalid argument, lstat 'C:\hiberfil.sys'
+Watchpack Error (initial scan): Error: EINVAL: invalid argument, lstat 'C:\pagefile.sys'
+Watchpack Error (initial scan): Error: EINVAL: invalid argument, lstat 'C:\swapfile.sys'
+○ Compiling /(root)/books/new/page ...
+Watchpack Error (initial scan): Error: EINVAL: invalid argument, lstat 'C:\DumpStack.log.tmp'
+Watchpack Error (initial scan): Error: EINVAL: invalid argument, lstat 'C:\System Volume Information'
+Watchpack Error (initial scan): Error: EINVAL: invalid argument, lstat 'C:\hiberfil.sys'
+Watchpack Error (initial scan): Error: EINVAL: invalid argument, lstat 'C:\pagefile.sys'
+Watchpack Error (initial scan): Error: EINVAL: invalid argument, lstat 'C:\swapfile.sys'
+ GET /books/new 200 in 4.7s (next.js: 3.9s, proxy.ts: 181ms, application-code: 632ms)
+MongoDB connection error. Please make sure MongoDB is running. MongoServerError: bad auth : Authentication failed.
+Error connecting to database MongoServerError: bad auth : Authentication failed.
+    at ignore-listed frames {
+  errorLabelSet: Set(2) { 'HandshakeError', 'ResetPool' },
+  errorResponse: {
+    ok: 0,
+    errmsg: 'bad auth : Authentication failed.',
+    code: 8000,
+    codeName: 'AtlasError'
+  },
+  ok: 0,
+  code: 8000,
+  codeName: 'AtlasError',
+  connectionGeneration: 0
+}
+ GET / 200 in 3.3s (next.js: 1572ms, proxy.ts: 85ms, application-code: 1666ms)
+ GET /books/new 200 in 254ms (next.js: 9ms, proxy.ts: 18ms, application-code: 227ms)
+MongoDB connection error. Please make sure MongoDB is running. MongoServerError: bad auth : Authentication failed.
+Error connecting to database MongoServerError: bad auth : Authentication failed.
+    at ignore-listed frames {
+  errorLabelSet: Set(2) { 'HandshakeError', 'ResetPool' },
+  errorResponse: {
+    ok: 0,
+    errmsg: 'bad auth : Authentication failed.',
+    code: 8000,
+    codeName: 'AtlasError'
+  },
+  ok: 0,
+  code: 8000,
+  codeName: 'AtlasError',
+  connectionGeneration: 0
+}
+ GET / 200 in 680ms (next.js: 5ms, proxy.ts: 21ms, application-code: 654ms)
+ GET /books/new 200 in 73ms (next.js: 3ms, proxy.ts: 18ms, application-code: 53ms)
+[browser] Image with src "/assets/logo.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/assets/hero-illustration.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+ GET / 200 in 66ms (next.js: 18ms, proxy.ts: 21ms, application-code: 27ms)
+[browser] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview (https://boss-cowbird-944.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js:40:1032)
+[browser] Clerk: Structural CSS detected that may break on updates.
+
+Found:
+  - CSS ".cl-drawerRoot .cl-formButtonPrimary"
+  - CSS ".cl-modalContent .cl-formButtonPrimary"
+  - CSS ".cl-checkoutForm .cl-formButtonPrimary"
+  - CSS ".cl-main button[type="submit"][class*="formButtonPrimary"]"
+  - CSS ".cl-footer button[class*="formButtonPrimary"]"
+  (+5 more)
+
+These selectors depend on the internal DOM structure of Clerk's components, which may change when Clerk deploys component updates.
+To prevent breaking changes, install @clerk/ui and pass it to ClerkProvider:
+
+  import { ui } from '@clerk/ui'
+  <ClerkProvider ui={ui}>
+
+Learn more: https://clerk.com/docs/reference/components/versioning
+(code=structural_css_pin_clerk_ui) (https://boss-cowbird-944.clerk.accounts.dev/npm/@clerk/ui@1/dist/ui.browser.js:35:1730)
+MongoDB connection error. Please make sure MongoDB is running. MongoServerError: bad auth : Authentication failed.
+Error connecting to database MongoServerError: bad auth : Authentication failed.
+    at ignore-listed frames {
+  errorLabelSet: Set(2) { 'HandshakeError', 'ResetPool' },
+  errorResponse: {
+    ok: 0,
+    errmsg: 'bad auth : Authentication failed.',
+    code: 8000,
+    codeName: 'AtlasError'
+  },
+  ok: 0,
+  code: 8000,
+  codeName: 'AtlasError',
+  connectionGeneration: 0
+}
+ GET / 200 in 722ms (next.js: 6ms, proxy.ts: 24ms, application-code: 693ms)
+MongoDB connection error. Please make sure MongoDB is running. MongoServerError: bad auth : Authentication failed.
+Error connecting to database MongoServerError: bad auth : Authentication failed.
+    at ignore-listed frames {
+  errorLabelSet: Set(2) { 'HandshakeError', 'ResetPool' },
+  errorResponse: {
+    ok: 0,
+    errmsg: 'bad auth : Authentication failed.',
+    code: 8000,
+    codeName: 'AtlasError'
+  },
+  ok: 0,
+  code: 8000,
+  codeName: 'AtlasError',
+  connectionGeneration: 0
+}
+ GET / 200 in 706ms (next.js: 3ms, proxy.ts: 11ms, application-code: 691ms)
+ GET / 200 in 31ms (next.js: 3ms, proxy.ts: 22ms, application-code: 7ms)
+MongoDB connection error. Please make sure MongoDB is running. MongoServerError: bad auth : Authentication failed.
+Error connecting to database MongoServerError: bad auth : Authentication failed.
+    at ignore-listed frames {
+  errorLabelSet: Set(2) { 'HandshakeError', 'ResetPool' },
+  errorResponse: {
+    ok: 0,
+    errmsg: 'bad auth : Authentication failed.',
+    code: 8000,
+    codeName: 'AtlasError'
+  },
+  ok: 0,
+  code: 8000,
+  codeName: 'AtlasError',
+  connectionGeneration: 0
+}
+ GET / 200 in 727ms (next.js: 3ms, proxy.ts: 16ms, application-code: 708ms)
+MongoDB connection error. Please make sure MongoDB is running. MongoServerError: bad auth : Authentication failed.
+Error connecting to database MongoServerError: bad auth : Authentication failed.
+    at ignore-listed frames {
+  errorLabelSet: Set(2) { 'HandshakeError', 'ResetPool' },
+  errorResponse: {
+    ok: 0,
+    errmsg: 'bad auth : Authentication failed.',
+    code: 8000,
+    codeName: 'AtlasError'
+  },
+  ok: 0,
+  code: 8000,
+  codeName: 'AtlasError',
+  connectionGeneration: 0
+}
+ GET / 200 in 655ms (next.js: 2ms, proxy.ts: 21ms, application-code: 631ms)
+[browser] Image with src "/assets/logo.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/assets/hero-illustration.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview (https://boss-cowbird-944.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js:40:1032)
+ GET / 200 in 28ms (next.js: 3ms, proxy.ts: 21ms, application-code: 5ms)
+[browser] Clerk: Structural CSS detected that may break on updates.
+
+Found:
+  - CSS ".cl-drawerRoot .cl-formButtonPrimary"
+  - CSS ".cl-modalContent .cl-formButtonPrimary"
+  - CSS ".cl-checkoutForm .cl-formButtonPrimary"
+  - CSS ".cl-main button[type="submit"][class*="formButtonPrimary"]"
+  - CSS ".cl-footer button[class*="formButtonPrimary"]"
+  (+5 more)
+
+These selectors depend on the internal DOM structure of Clerk's components, which may change when Clerk deploys component updates.
+To prevent breaking changes, install @clerk/ui and pass it to ClerkProvider:
+
+  import { ui } from '@clerk/ui'
+  <ClerkProvider ui={ui}>
+
+Learn more: https://clerk.com/docs/reference/components/versioning
+(code=structural_css_pin_clerk_ui) (https://boss-cowbird-944.clerk.accounts.dev/npm/@clerk/ui@1/dist/ui.browser.js:35:1730)
+ GET /books/new 200 in 366ms (next.js: 135ms, proxy.ts: 146ms, application-code: 86ms)
+MongoDB connection error. Please make sure MongoDB is running. MongoServerError: bad auth : Authentication failed.
+MongoDB connection error. Please make sure MongoDB is running. MongoServerError: bad auth : Authentication failed.
+Error connecting to database MongoServerError: bad auth : Authentication failed.
+    at ignore-listed frames {
+  errorLabelSet: Set(2) { 'HandshakeError', 'ResetPool' },
+  errorResponse: {
+    ok: 0,
+    errmsg: 'bad auth : Authentication failed.',
+    code: 8000,
+    codeName: 'AtlasError'
+  },
+  ok: 0,
+  code: 8000,
+  codeName: 'AtlasError',
+  connectionGeneration: 0
+}
+Error connecting to database MongoServerError: bad auth : Authentication failed.
+    at ignore-listed frames {
+  errorLabelSet: Set(2) { 'HandshakeError', 'ResetPool' },
+  errorResponse: {
+    ok: 0,
+    errmsg: 'bad auth : Authentication failed.',
+    code: 8000,
+    codeName: 'AtlasError'
+  },
+  ok: 0,
+  code: 8000,
+  codeName: 'AtlasError',
+  connectionGeneration: 0
+}
+ GET / 200 in 864ms (next.js: 142ms, proxy.ts: 19ms, application-code: 703ms)
+ GET / 200 in 548ms (next.js: 16ms, proxy.ts: 20ms, application-code: 511ms)
+MongoDB connection error. Please make sure MongoDB is running. MongoServerError: bad auth : Authentication failed.
+Error connecting to database MongoServerError: bad auth : Authentication failed.
+    at ignore-listed frames {
+  errorLabelSet: Set(2) { 'HandshakeError', 'ResetPool' },
+  errorResponse: {
+    ok: 0,
+    errmsg: 'bad auth : Authentication failed.',
+    code: 8000,
+    codeName: 'AtlasError'
+  },
+  ok: 0,
+  code: 8000,
+  codeName: 'AtlasError',
+  connectionGeneration: 0
+}
+ GET / 200 in 816ms (next.js: 3ms, proxy.ts: 14ms, application-code: 800ms)
+[browser] Image with src "/assets/logo.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview (https://boss-cowbird-944.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js:40:1032)
+[browser] Image with src "/assets/hero-illustration.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+ GET /books/new 200 in 516ms (next.js: 7ms, proxy.ts: 18ms, application-code: 492ms)
+[browser] Clerk: Structural CSS detected that may break on updates.
+
+Found:
+  - CSS ".cl-drawerRoot .cl-formButtonPrimary"
+  - CSS ".cl-modalContent .cl-formButtonPrimary"
+  - CSS ".cl-checkoutForm .cl-formButtonPrimary"
+  - CSS ".cl-main button[type="submit"][class*="formButtonPrimary"]"
+  - CSS ".cl-footer button[class*="formButtonPrimary"]"
+  (+5 more)
+
+These selectors depend on the internal DOM structure of Clerk's components, which may change when Clerk deploys component updates.
+To prevent breaking changes, install @clerk/ui and pass it to ClerkProvider:
+
+  import { ui } from '@clerk/ui'
+  <ClerkProvider ui={ui}>
+
+Learn more: https://clerk.com/docs/reference/components/versioning
+(code=structural_css_pin_clerk_ui) (https://boss-cowbird-944.clerk.accounts.dev/npm/@clerk/ui@1/dist/ui.browser.js:35:1730)
+ GET / 200 in 28ms (next.js: 6ms, proxy.ts: 12ms, application-code: 10ms)
+MongoDB connection error. Please make sure MongoDB is running. MongoServerError: bad auth : Authentication failed.
+Error connecting to database MongoServerError: bad auth : Authentication failed.
+    at ignore-listed frames {
+  errorLabelSet: Set(2) { 'HandshakeError', 'ResetPool' },
+  errorResponse: {
+    ok: 0,
+    errmsg: 'bad auth : Authentication failed.',
+    code: 8000,
+    codeName: 'AtlasError'
+  },
+  ok: 0,
+  code: 8000,
+  codeName: 'AtlasError',
+  connectionGeneration: 0
+}
+ GET / 200 in 1052ms (next.js: 7ms, proxy.ts: 434ms, application-code: 611ms)
+ GET / 200 in 15ms (next.js: 3ms, proxy.ts: 7ms, application-code: 6ms)
+[?25h
