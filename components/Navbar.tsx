@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import {usePathname} from "next/navigation";
-import { Show, SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
+import { Show, SignInButton, SignUpButton, UserButton, useUser, SignOutButton } from "@clerk/nextjs";
 import {cn} from "@/lib/utils";
 
 const navItems = [
@@ -40,14 +40,23 @@ const Navbar = () => {
                             <SignInButton mode="modal" />
                             <SignUpButton mode="modal" />
                         </Show>
+                        
                         <Show when="signed-in">
-                            <div className="nav-user-link">
+                            <div className="nav-user-link flex gap-4 items-center">
                                 <UserButton />
                                 {user?.firstName && (
                                     <Link href="/subscriptions" className="nav-user-name">
                                         {user.firstName}
                                     </Link>
                                 )}
+                                
+                                {/* --- ADDED SIGN OUT BUTTON HERE --- */}
+                                <SignOutButton redirectUrl="/">
+                                    <button className="text-red-500 hover:text-red-700 font-medium text-sm transition-colors">
+                                        Sign Out
+                                    </button>
+                                </SignOutButton>
+                                
                             </div>
                         </Show>
                     </div>
