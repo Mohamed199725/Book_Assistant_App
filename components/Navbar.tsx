@@ -42,17 +42,19 @@ const Navbar = () => {
                         </Show>
                         
                         <Show when="signed-in">
-                            <div className="nav-user-link flex gap-4 items-center">
+                            {/* Added gap-4 here to separate the user info from the sign out button */}
+                            <div className="nav-user-link flex items-center gap-4">
                                 <UserButton />
+                                
                                 {user?.firstName && (
                                     <Link href="/subscriptions" className="nav-user-name">
                                         {user.firstName}
                                     </Link>
                                 )}
                                 
-                                {/* --- ADDED SIGN OUT BUTTON HERE --- */}
+                                {/* RED BOX SIGN OUT BUTTON */}
                                 <SignOutButton redirectUrl="/">
-                                    <button className="text-red-500 hover:text-red-700 font-medium text-sm transition-colors">
+                                    <button className="bg-red-600 hover:bg-red-700 text-white font-medium text-sm py-1.5 px-4 rounded-md transition-colors duration-200 shadow-sm">
                                         Sign Out
                                     </button>
                                 </SignOutButton>
