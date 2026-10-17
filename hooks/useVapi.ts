@@ -39,6 +39,41 @@ function getVapi() {
 
 export type CallStatus = 'idle' | 'connecting' | 'starting' | 'listening' | 'thinking' | 'speaking';
 
+// Vapi emits errors as `Error` instances in some paths and as plain objects
+// (e.g. `{ error: '...' }`) in others. Reading `.message` blindly yields
+// `undefined` and collapses every failure into the same generic message.
+function describeVapiError(error: unknown): string {
+    const raw = [
+        error instanceof Error ? error.message : undefined,
+        typeof error === 'object' && error !== null
+            ? ((error as { error?: string; message?: string }).error ??
+              (error as { message?: string }).message)
+            : undefined,
+        typeof error === 'string' ? error : undefined,
+    ]
+        .filter((part): part is string => typeof part === 'string' && part.length > 0)
+        .join(' ');
+
+    const message = raw.toLowerCase();
+
+    if (message.includes('permission') || message.includes('notallowed')) {
+        return 'Microphone access was blocked. Allow microphone permissions and try again.';
+    }
+    if (message.includes('timeout') || message.includes('silence')) {
+        return 'Session ended due to inactivity. Click the mic to start again.';
+    }
+    if (message.includes('network') || message.includes('connection')) {
+        return 'Connection lost. Please check your internet and try again.';
+    }
+    if (message.includes('ejected') || message.includes('meeting has ended')) {
+        return 'The voice session was ended by the server. Click the mic to start again.';
+    }
+
+    return raw
+        ? `Session ended: ${raw}`
+        : 'Session ended unexpectedly. Click the mic to start again.';
+}
+
 export function useVapi(book: IBook) {
     const { userId } = useAuth();
     const { limits } = useSubscription();
@@ -81,7 +116,17 @@ export function useVapi(book: IBook) {
 
                         // Check duration limit
                         if (newDuration >= maxDurationRef.current) {
+                            // Clear first - otherwise this fires every second,
+                            // calling stop() repeatedly and re-setting the error.
+                            if (timerRef.current) {
+                                clearInterval(timerRef.current);
+                                timerRef.current = null;
+                            }
+                            startTimeRef.current = null;
+
+                            isStoppingRef.current = true;
                             getVapi().stop();
+                            setStatus('idle');
                             setLimitError(
                                 `Session time limit (${Math.floor(
                                     maxDurationRef.current / SECONDS_PER_MINUTE,
@@ -169,7 +214,7 @@ export function useVapi(book: IBook) {
                 }
             },
 
-            error: (error: Error) => {
+            error: (error: Error | { error?: string; message?: string }) => {
                 console.error('Vapi error:', error);
                 // Don't reset isStoppingRef here - delayed events may still fire
                 setStatus('idle');
@@ -190,17 +235,71 @@ export function useVapi(book: IBook) {
                     sessionIdRef.current = null;
                 }
 
-                // Show user-friendly error message
-                const errorMessage = error.message?.toLowerCase() || '';
-                if (errorMessage.includes('timeout') || errorMessage.includes('silence')) {
-                    setLimitError('Session ended due to inactivity. Click the mic to start again.');
-                } else if (errorMessage.includes('network') || errorMessage.includes('connection')) {
-                    setLimitError('Connection lost. Please check your internet and try again.');
-                } else {
-                    setLimitError('Session ended unexpectedly. Click the mic to start again.');
-                }
+                setLimitError(describeVapiError(error));
 
                 startTimeRef.current = null;
+            },
+
+            // Structured failure emitted when the call never comes up (bad
+            // assistant id, provider error, quota, mic permission, etc.).
+            // Without this the reason is lost and the user only sees a
+            // generic "ended unexpectedly".
+            'call-start-failed': (event: {
+                stage: string;
+                error: string;
+                context?: Record<string, unknown>;
+            }) => {
+                console.error('Vapi call failed to start:', event);
+                setStatus('idle');
+
+                if (timerRef.current) {
+                    clearInterval(timerRef.current);
+                    timerRef.current = null;
+                }
+
+                if (sessionIdRef.current) {
+                    endVoiceSession(sessionIdRef.current, durationRef.current).catch((err) =>
+                        console.error('Failed to end voice session on start failure:', err),
+                    );
+                    sessionIdRef.current = null;
+                }
+
+                setLimitError(
+                    `Could not start the voice session (${event.stage}). ${event.error}`,
+                );
+
+                startTimeRef.current = null;
+            },
+
+            // The Daily transport dropped. This is the event behind
+            // "send transport changed to disconnected" - the UI must not keep
+            // pretending the call is live, or the user talks into a dead room.
+            'network-connection': (event: { connection?: string }) => {
+                console.warn('Vapi network connection:', event);
+
+                if (event.connection === 'disconnected') {
+                    if (isStoppingRef.current) return;
+
+                    setStatus('idle');
+                    setCurrentMessage('');
+                    setCurrentUserMessage('');
+
+                    if (timerRef.current) {
+                        clearInterval(timerRef.current);
+                        timerRef.current = null;
+                    }
+
+                    if (sessionIdRef.current) {
+                        endVoiceSession(sessionIdRef.current, durationRef.current).catch((err) =>
+                            console.error('Failed to end voice session on disconnect:', err),
+                        );
+                        sessionIdRef.current = null;
+                    }
+
+                    setLimitError('Connection to the voice session was lost. Click the mic to start again.');
+
+                    startTimeRef.current = null;
+                }
             },
         };
 
@@ -252,8 +351,6 @@ export function useVapi(book: IBook) {
             }
 
             sessionIdRef.current = result.sessionId || null;
-            // Note: Server-returned maxDurationMinutes is informational only
-            // The actual limit is enforced by useLatestRef(limits.maxSessionMinutes * 60)
 
             const firstMessage = `Hey, good to meet you. Quick question before we dive in - have you actually read ${book.title} yet, or are we starting fresh?`;
 
@@ -277,7 +374,18 @@ export function useVapi(book: IBook) {
         } catch (err) {
             console.error('Failed to start call:', err);
             setStatus('idle');
-            setLimitError('Failed to start voice session. Please try again.');
+
+            // The session record was already created above, so close it out
+            // here too - otherwise a failed start burns one of the user's
+            // monthly sessions and leaves a dangling open record.
+            if (sessionIdRef.current) {
+                endVoiceSession(sessionIdRef.current, 0).catch((endErr) =>
+                    console.error('Failed to end voice session after start error:', endErr),
+                );
+                sessionIdRef.current = null;
+            }
+
+            setLimitError(describeVapiError(err));
         }
     }, [book._id, book.title, book.author, voice, userId]);
 

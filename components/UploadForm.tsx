@@ -22,7 +22,6 @@ import {upload} from "@vercel/blob/client";
 
 const UploadForm = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isMounted] = useState(() => typeof window !== 'undefined');
     const { userId } = useAuth();
     const router = useRouter()
 
@@ -33,7 +32,7 @@ const UploadForm = () => {
             author: '',
             persona: '',
             pdfFile: undefined,
-            coverImage: undefined,
+            coverImage: null,
         },
     });
 
@@ -55,7 +54,6 @@ const UploadForm = () => {
                 router.push(`/books/${existsCheck.book.slug}`)
                 return;
             }
-
             const fileTitle = data.title.replace(/\s+/g, '-').toLowerCase();
             const pdfFile = data.pdfFile;
 
@@ -65,7 +63,6 @@ const UploadForm = () => {
                 toast.error("Failed to parse PDF. Please try again with a different file.");
                 return;
             }
-
             const uploadedPdfBlob = await upload(fileTitle, pdfFile, {
                 access: 'public',
                 handleUploadUrl: '/api/upload',
@@ -138,15 +135,19 @@ const UploadForm = () => {
         }
     };
 
-    if (!isMounted) return null;
-
     return (
         <>
             {isSubmitting && <LoadingOverlay />}
 
             <div className="new-book-wrapper">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit, (errors) => {
+                            const firstError = Object.values(errors)[0];
+                            toast.error(firstError?.message as string || "Please fix the highlighted fields before submitting.");
+                        })}
+                        className="space-y-8"
+                    >
                         {/* 1. PDF File Upload */}
                         <FileUploader
                             control={form.control}
