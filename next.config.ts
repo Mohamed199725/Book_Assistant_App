@@ -9,10 +9,18 @@ const nextConfig: NextConfig = {
     typescript: {
         ignoreBuildErrors: true,
     },
-    images: { remotePatterns: [
+    images: { 
+        remotePatterns: [
             { protocol: 'https', hostname: 'covers.openlibrary.org' },
             { protocol: 'https', hostname: 's7pmqnffig4zbjdb.public.blob.vercel-storage.com' },
-        ]}
+        ]
+    },
+    // 👇 ADD THIS BLOCK 👇
+    turbopack: {
+        resolveAlias: {
+            '@': '.',
+        },
+    },
 };
 
 export default nextConfig;
